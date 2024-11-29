@@ -5,6 +5,7 @@ import localFont from "next/font/local"
 import "./globals.css"
 
 import { ConvexClientProvider } from "@/components/ConvexClientProvider"
+import { Header } from "@/components/header"
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -29,13 +30,14 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<ConvexClientProvider>
-				<ClerkProvider>
-					<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+				<ConvexClientProvider>
+					<ClerkProvider>
+						<Header />
 						{children}
-					</body>
-				</ClerkProvider>
-			</ConvexClientProvider>
+					</ClerkProvider>
+				</ConvexClientProvider>
+			</body>
 		</html>
 	)
 }
