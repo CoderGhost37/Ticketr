@@ -7,6 +7,7 @@ import "./globals.css"
 import { ConvexClientProvider } from "@/components/ConvexClientProvider"
 import SyncUserWithConvex from "@/components/SyncUserWithConvex"
 import { Header } from "@/components/header"
+import { Toaster } from "@/components/ui/toaster"
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -36,6 +37,7 @@ export default function RootLayout({
 					<ClerkProvider>
 						<Header />
 						<SyncUserWithConvex />
+						<Toaster />
 						{children}
 					</ClerkProvider>
 				</ConvexClientProvider>
