@@ -1,3 +1,9 @@
+import { EventList } from "@/components/eventlist"
+
 export default function Home() {
-	return <div>Hello World</div>
+	return (
+		<div>
+			<EventList />
+		</div>
+	)
 }
