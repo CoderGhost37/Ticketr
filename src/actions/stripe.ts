@@ -16,7 +16,7 @@ if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL)
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"
 
 export async function createStripeConnectCustomer() {
 	const { userId } = await auth()
