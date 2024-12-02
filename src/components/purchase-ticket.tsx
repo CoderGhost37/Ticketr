@@ -4,6 +4,7 @@ import { Ticket } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
+import { createStripeCheckoutSession } from "@/actions/stripe"
 import { ReleaseTicket } from "@/components/release-ticket"
 import { api } from "../../convex/_generated/api"
 import type { Id } from "../../convex/_generated/dataModel"
@@ -54,12 +55,22 @@ export const PurchaseTicket = ({ eventId }: { eventId: Id<"events"> }) => {
 	}, [offerExpiresAt, isExpired])
 
 	const handlePurchase = async () => {
-		setIsLoading(true)
+		if (!user) {
+			return
+		}
 
 		try {
-			await router.push(`/events/${eventId}/checkout`)
+			setIsLoading(true)
+			const { sessionUrl } = await createStripeCheckoutSession({
+				eventId,
+			})
+
+			if (sessionUrl) {
+				router.push(sessionUrl)
+			}
 		} catch (error) {
-			console.error("Failed to redirect to checkout", error)
+			console.error("Error creating checkout session:", error)
+		} finally {
 			setIsLoading(false)
 		}
 	}
