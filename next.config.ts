@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+	/* config options here */
+	images: {
+		domains: ["colorless-buzzard-523.convex.cloud"],
+	},
+}
 
-export default nextConfig;
+export default nextConfig
