@@ -3,7 +3,20 @@ import type { NextConfig } from "next"
 const nextConfig: NextConfig = {
 	/* config options here */
 	images: {
-		domains: ["colorless-buzzard-523.convex.cloud"],
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "img.clerk.com",
+			},
+			{
+				protocol: "https",
+				hostname: "colorless-buzzard-523.convex.cloud",
+			},
+			{
+				protocol: "https",
+				hostname: "artful-gnat-800.convex.cloud",
+			},
+		],
 	},
 }
 
