@@ -1,5 +1,6 @@
-import { v } from "convex/values"
-import { internal } from "./_generated/api"
+import { MINUTE, RateLimiter } from "@convex-dev/rate-limiter"
+import { ConvexError, v } from "convex/values"
+import { components, internal } from "./_generated/api"
 import { mutation, query } from "./_generated/server"
 import { DURATIONS, TICKET_STATUS, WAITING_LIST_STATUS } from "./constants"
 import { processQueue } from "./waitingList"
@@ -10,6 +11,15 @@ export type Metrics = {
 	cancelledTickets: number
 	revenue: number
 }
+
+// Initialize rate limiter
+const rateLimiter = new RateLimiter(components.rateLimiter, {
+	queueJoin: {
+		kind: "fixed window",
+		rate: 3, // 3 joins allowed
+		period: 30 * MINUTE, // in 30 minutes
+	},
+})
 
 export const get = query({
 	args: {},
@@ -117,14 +127,14 @@ export const joinWaitingList = mutation({
 	args: { eventId: v.id("events"), userId: v.string() },
 	handler: async (ctx, { eventId, userId }) => {
 		// Rate limit check
-		// const status = await rateLimiter.limit(ctx, "queueJoin", { key: userId });
-		// if (!status.ok) {
-		//   throw new ConvexError(
-		//     `You've joined the waiting list too many times. Please wait ${Math.ceil(
-		//       status.retryAfter / (60 * 1000)
-		//     )} minutes before trying again.`
-		//   );
-		// }
+		const status = await rateLimiter.limit(ctx, "queueJoin", { key: userId })
+		if (!status.ok) {
+			throw new ConvexError(
+				`You've joined the waiting list too many times. Please wait ${Math.ceil(
+					status.retryAfter / (60 * 1000)
+				)} minutes before trying again.`
+			)
+		}
 
 		// Verify the event exists
 		const event = await ctx.db.get(eventId)
